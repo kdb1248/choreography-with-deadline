@@ -34,6 +34,23 @@ public class Inventory {
 
     //<<< Clean Arch / Port Method
     public static void stockDecrease(DeliveryStarted deliveryStarted) {
+        repository().findById(Long.valueOf(deliveryStarted.getProductId())).ifPresent(inventory->{
+            if(inventory.getStock() >= deliveryStarted.getQty()){
+                inventory.setStock(inventory.getStock() - deliveryStarted.getQty()); 
+                repository().save(inventory);
+
+                StockDecreased stockDecreased = new StockDecreased(inventory);
+                stockDecreased.setOrderId((deliveryStarted.getOrderId()));
+                stockDecreased.publishAfterCommit();
+
+            }else{
+                StockDecreaseFailed stockDecreaseFailed = new StockDecreaseFailed(inventory);
+                stockDecreaseFailed.setId(stockDecreaseFailed.getId()); 
+                stockDecreaseFailed.publishAfterCommit();
+            }
+            
+        });
+        
         //implement business logic here:
 
         /** Example 1:  new item 

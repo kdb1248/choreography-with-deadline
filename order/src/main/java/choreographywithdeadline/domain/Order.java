@@ -122,28 +122,22 @@ public class Order {
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public static void reject(DeadlineReached deadlineReached) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Order order = new Order();
-        repository().save(order);
-
-        */
-
-        /** Example 2:  finding and process
+        
         
 
-        repository().findById(deadlineReached.get???()).ifPresent(order->{
+        repository().findById(deadlineReached.getOrderId()).ifPresent(order->{
             
-            order // do something
+            order.setStatus("REJECTED"); // do something
             repository().save(order);
+
+            // OrderRejected orderRejected = new OrderRejected(order);
+            // orderRejected.publishAfterCommit();
+            new OrderRejected(order).publishAfterCommit();
 
 
          });
-        */
+        
 
     }
-    //>>> Clean Arch / Port Method
-
 }
-//>>> DDD / Aggregate Root
+
